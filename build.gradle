@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group 'com.tencent.tars.jmeter'
+version '1.7.1'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.antlr', name: 'antlr-runtime', version: '3.5.2'
+    compile group: 'com.google.code.gson', name: "gson", version: '2.8.6'
+    compileOnly(group: 'org.apache.jmeter', name: 'ApacheJMeter_core', version: '5.2.1') {
+        exclude group: 'org.apache.jmeter', module: 'bom'
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+jar {
+    manifestContentCharset 'utf-8'
+    metadataCharset 'utf-8'
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+}
