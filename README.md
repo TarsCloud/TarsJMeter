@@ -85,7 +85,7 @@ Dependencies listed as following:
 
    * Request status: Two-way interaction status information between the customer and Tars service
 
-     <img src="./res/step4.png" width="600" height="400"/>
+     <img src="./res/step5.png" width="600" height="400"/>
 
 4. Click Run to view the tree result, you can get the response information of Tars service<img src="./res/step6.png" width="600" height="400"/>
 
