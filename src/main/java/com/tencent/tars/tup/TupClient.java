@@ -4,7 +4,9 @@ import com.tencent.tars.protocol.TarsStructUtil;
 import com.tencent.tars.protocol.packet.RequestPacket;
 import com.tencent.tars.protocol.packet.ResponsePacket;
 import com.tencent.tars.tup.session.INetListener;
+import com.tencent.tars.tup.session.Session;
 import com.tencent.tars.tup.session.TcpSession;
+import com.tencent.tars.tup.session.UdpSession;
 import com.tencent.tars.utils.ErrorCode;
 
 import java.net.Proxy;
@@ -16,11 +18,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * TupClient实现
- * @author brookechen
  */
 public class TupClient implements INetListener {
 
-    private TcpSession session;
+    private Session session;
 
     private Proxy mProxy = null;
     private String mIp; //IP
@@ -29,7 +30,7 @@ public class TupClient implements INetListener {
     private String mFunc;
     private int connectTimeout = 8000;
     private int readTimeout = 8000;
-
+    private String transmit = "TCP";
 
     private short iVersion = 0;
     private byte cPacketType = 0;
@@ -55,6 +56,7 @@ public class TupClient implements INetListener {
         private String mFunc;
         private int connectTimeout = 8000;
         private int readTimeout = 8000;
+        private String transmit = "TCP";
 
         public Builder setProxy(Proxy proxy) {
             this.mProxy = proxy;
@@ -91,6 +93,11 @@ public class TupClient implements INetListener {
             return this;
         }
 
+        public Builder setTransmitType(String transmit) {
+            this.transmit = transmit;
+            return this;
+        }
+
         public TupClient build() {
             TupClient client = new TupClient();
             client.mProxy = this.mProxy;
@@ -100,7 +107,12 @@ public class TupClient implements INetListener {
             client.mFunc = this.mFunc;
             client.connectTimeout = this.connectTimeout;
             client.readTimeout = this.readTimeout;
-            client.session = new TcpSession(new IPEndPoint(client.mIp, client.mPort), client.mProxy);
+            client.transmit = this.transmit;
+            if (client.transmit.equals("TCP")) {
+                client.session = new TcpSession(new IPEndPoint(client.mIp, client.mPort), client.mProxy);
+            } else {
+                client.session = new UdpSession(new IPEndPoint(client.mIp, client.mPort));
+            }
             client.session.setConnectTimeout(client.connectTimeout);
             client.session.setReadTimeout(client.readTimeout);
             return client;
@@ -141,7 +153,7 @@ public class TupClient implements INetListener {
         currentResp = TarsStructUtil.getTarsStruct(data, new ResponsePacket());
     }
 
-    public static Builder builder() {
+    public static TupClient.Builder builder() {
         return new Builder();
     }
 

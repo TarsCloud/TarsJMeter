@@ -10,9 +10,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * @author brookechen
- */
 public class JsonStreamUtil {
     /**
      * 把JceStruct按模板录制成json数据
@@ -30,7 +27,7 @@ public class JsonStreamUtil {
         return gson.toJson(jsonObject);
     }
 
-    public static String toPrettyFormat(Map maoObject) {
+    public static String toPrettyFormat(Map<String,String> maoObject) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(maoObject,Map.class);
     }

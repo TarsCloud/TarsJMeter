@@ -49,6 +49,7 @@ public class TarsImpl extends TarsAbstractImpl {
                     .setProxy(this.getProxy())
                     .setConnectTimeout(testElement.getConnectTimeout())
                     .setReadTimeout(testElement.getReadTimeout())
+                    .setTransmitType(testElement.getTransmitType())
                     .build();
         }
         try {

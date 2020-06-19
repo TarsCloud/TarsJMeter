@@ -7,6 +7,9 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 
 public abstract class TarsAbstractImpl implements Interruptible {
+
+    protected static final String KEEP_ALIVE_NETWORK = "keepAliveNetwork";
+
     protected final TarsSamplerBase testElement;
 
     protected int errCode = 0;

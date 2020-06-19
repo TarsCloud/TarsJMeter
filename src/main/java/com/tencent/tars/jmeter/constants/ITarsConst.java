@@ -13,6 +13,9 @@ public interface ITarsConst {
     String SERVANT_IP = "TarsSampler.ip";
 
     String SERVANT_PORT = "TarsSampler.port";
+
+    String SERVANT_PROTOCOL = "TarsSampler.protocol";
+
     String SERVANT_PATH = "TarsSampler.servant";
 
     String FUNC_NAME = "TarsSampler.funcName";
@@ -41,4 +44,7 @@ public interface ITarsConst {
     String KEY_REQ_PKT_TYPE = "Tup.cPacketType";
     String KEY_REQ_MSG_TYPE = "Tup.iMessageType";
     String KEY_REQ_I_TIMEOUT = "Tup.iTimeout";
+
+    String TCP = "TCP";
+    String UDP = "UDP";
 }

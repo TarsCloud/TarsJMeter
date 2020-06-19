@@ -159,6 +159,9 @@ public class ErrorCode {
     public static final int ERR_NETWORK_RECV_0 = -12 * ERROR_NETWORK_BASE; // 回包读取时，读到0
     public static final int ERR_NETWORK_START_THROWABLE = -13 * ERROR_NETWORK_BASE; // 连接网络时throwable
     public static final int ERR_NETWORK_START_UNKNOWN = -14 * ERROR_NETWORK_BASE; // 连接网络时throwable
+    public static final int ERR_NETWORK_UDP_RECV_EOF = -15 * ERROR_NETWORK_BASE; // UDP接收报文存贮大小不够
+    public static final int ERR_NETWORK_UDP_RECV_IOE = -16 * ERROR_NETWORK_BASE; // 回包read IOE
+    public static final int ERR_NETWORK_UDP_RECV_THROWABLE = -17 * ERROR_NETWORK_BASE; // 回包读取时，抛出异常
     public static final int ERR_NETWORK_UNKNOWN = -99 * ERROR_NETWORK_BASE;
 
 
@@ -195,6 +198,12 @@ public class ErrorCode {
                 return "NetErr: check socket throwable, ";
             case ERR_NETWORK_START_UNKNOWN:
                 return "NetErr: start socket unknown error, ";
+            case ERR_NETWORK_UDP_RECV_EOF:
+                return "NetErr: udp recv iod, ";
+            case ERR_NETWORK_UDP_RECV_IOE:
+                return "NetErr: udp recv ioe, ";
+            case ERR_NETWORK_UDP_RECV_THROWABLE:
+                return "NetErr: udp recv throwable, ";
             case ERR_NETWORK_UNKNOWN:
             default:
                 return "Network unknown code:" + netErr;

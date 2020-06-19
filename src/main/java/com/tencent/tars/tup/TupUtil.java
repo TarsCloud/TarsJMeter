@@ -11,9 +11,7 @@ import com.tencent.tars.protocol.tars.TarsOutputStream;
 
 import java.nio.ByteBuffer;
 
-/**
- * @author brookechen
- */
+
 public class TupUtil {
 
     private static boolean isTarsStruct(JsonObject jsonObject) {

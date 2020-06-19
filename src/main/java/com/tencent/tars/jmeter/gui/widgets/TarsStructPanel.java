@@ -68,12 +68,12 @@ public class TarsStructPanel extends JPanel implements ActionListener {
             @Override
             public boolean accept(File f) {
                 String name = f.getName();
-                return f.isDirectory() || name.toLowerCase().endsWith(".tars");
+                return f.isDirectory() || name.toLowerCase().endsWith(".tars") || name.toLowerCase().endsWith(".jce");
             }
 
             @Override
             public String getDescription() {
-                return "*.tars; dir include tars.";
+                return "*.tars;*.jce;dir include tars or jce";
             }
         });
         chooser.setMultiSelectionEnabled(false);

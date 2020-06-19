@@ -9,9 +9,6 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * @author brookechen
- */
 public class TcpSession extends Session {
     private static final Logger log = LoggerFactory.getLogger(TcpSession.class);
 

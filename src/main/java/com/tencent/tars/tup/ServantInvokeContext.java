@@ -5,9 +5,6 @@ import com.tencent.tars.protocol.JsonConst;
 
 import java.util.Map;
 
-/**
- * @author brookechen
- */
 public class ServantInvokeContext {
     private Object[] arguments;
     private Object[] retArguments = null;

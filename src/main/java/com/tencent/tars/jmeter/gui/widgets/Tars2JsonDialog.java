@@ -5,6 +5,7 @@ import org.apache.jmeter.gui.util.JSyntaxTextArea;
 import org.apache.jmeter.gui.util.JTextScrollPane;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.gui.ComponentUtil;
+import org.apache.jorphan.gui.JLabeledTextField;
 import org.apache.jorphan.gui.ObjectTableModel;
 
 import javax.swing.*;
@@ -14,9 +15,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Tars2JsonDialog  extends JDialog implements ActionListener, DocumentListener {
+public class Tars2JsonDialog extends JDialog implements ActionListener, DocumentListener {
 
-    /** Command for CANCEL. */
+    /**
+     * Command for CANCEL.
+     */
     private static final String CLOSE = "close"; // $NON-NLS-1$
 
     private static final String UPDATE = "update"; // $NON-NLS-1$
@@ -29,21 +32,24 @@ public class Tars2JsonDialog  extends JDialog implements ActionListener, Documen
 
     private ObjectTableModel tableModel;
 
+    private JLabeledTextField outerTextArea;
+
     private int selectedRow;
 
     private boolean textChanged = true; // change to false after the first insert
 
-    private boolean updateToTable;
+    private final boolean updateData;
 
-
-    public Tars2JsonDialog() {
+    public Tars2JsonDialog(JLabeledTextField textArea) {
         super((JFrame) null, "tars2json", true); //$NON-NLS-1$
-        updateToTable = false;
+        updateData = true;
+        this.outerTextArea = textArea;
+        init();
     }
 
     public Tars2JsonDialog(ObjectTableModel tableModel, int selectedRow) {
         super((JFrame) null, "tars2json", true); //$NON-NLS-1$
-        updateToTable = true;
+        updateData = true;
         this.tableModel = tableModel;
         this.selectedRow = selectedRow;
         init();
@@ -83,7 +89,7 @@ public class Tars2JsonDialog  extends JDialog implements ActionListener, Documen
     }
 
     private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
-        this.getContentPane().setLayout(new BorderLayout(10,10));
+        this.getContentPane().setLayout(new BorderLayout(10, 10));
 
         JLabel nameLabel = new JLabel(JMeterUtils.getResString("name")); //$NON-NLS-1$
         nameTF = new JTextField(JMeterUtils.getResString("name"), 20); //$NON-NLS-1$
@@ -95,7 +101,11 @@ public class Tars2JsonDialog  extends JDialog implements ActionListener, Documen
         JLabel valueLabel = new JLabel(JMeterUtils.getResString("value")); //$NON-NLS-1$
         valueTA = JSyntaxTextArea.getInstance(30, 80);
         valueTA.getDocument().addDocumentListener(this);
-        setValues(selectedRow);
+        if (tableModel != null) {
+            setValues((String) tableModel.getValueAt(selectedRow, 0), (String) tableModel.getValueAt(selectedRow, 1));
+        } else if (outerTextArea != null) {
+            setValues(outerTextArea.getLabel(), outerTextArea.getText());
+        }
         JPanel valuePane = new JPanel(new BorderLayout());
         valuePane.add(valueLabel, BorderLayout.NORTH);
         JTextScrollPane jTextScrollPane = JTextScrollPane.getInstance(valueTA);
@@ -112,11 +122,11 @@ public class Tars2JsonDialog  extends JDialog implements ActionListener, Documen
         mainPanel.add(detailPanel, BorderLayout.CENTER);
 
         TarsStructPanel loadPane = new TarsStructPanel(valueTA);
-        mainPanel.add(loadPane,BorderLayout.SOUTH);
+        mainPanel.add(loadPane, BorderLayout.SOUTH);
 
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton updateButton = new JButton(JMeterUtils.getResString("update")); //$NON-NLS-1$
-        if(updateToTable){
+        if (updateData) {
             updateButton.setActionCommand(UPDATE);
             updateButton.addActionListener(this);
         }
@@ -124,7 +134,7 @@ public class Tars2JsonDialog  extends JDialog implements ActionListener, Documen
         closeButton.setActionCommand(CLOSE);
         closeButton.addActionListener(this);
 
-        if(updateToTable){
+        if (updateData) {
             buttonsPanel.add(updateButton);
         }
         buttonsPanel.add(closeButton);
@@ -139,6 +149,7 @@ public class Tars2JsonDialog  extends JDialog implements ActionListener, Documen
 
     /**
      * Do search
+     *
      * @param e {@link ActionEvent}
      */
     @Override
@@ -146,7 +157,7 @@ public class Tars2JsonDialog  extends JDialog implements ActionListener, Documen
         String action = e.getActionCommand();
         if (action.equals(CLOSE)) {
             this.setVisible(false);
-        } else if (action.equals(UPDATE) && updateToTable) {
+        } else if (action.equals(UPDATE) && updateData) {
             doUpdate(e);
         }
     }
@@ -154,22 +165,26 @@ public class Tars2JsonDialog  extends JDialog implements ActionListener, Documen
 
     /**
      * Set TextField and TA values from model
-     * @param selectedRow Selected row
      */
-    private void setValues(int selectedRow) {
-        nameTF.setText((String)tableModel.getValueAt(selectedRow, 0));
-        valueTA.setInitialText((String)tableModel.getValueAt(selectedRow, 1));
+    private void setValues(String name, String value) {
+        nameTF.setText(name);
+        valueTA.setInitialText(value);
         valueTA.setCaretPosition(0);
         textChanged = false;
     }
 
     /**
      * Update model values
+     *
      * @param actionEvent the event that led to this call
      */
     protected void doUpdate(ActionEvent actionEvent) {
-        tableModel.setValueAt(nameTF.getText(), selectedRow, 0);
-        tableModel.setValueAt(valueTA.getText(), selectedRow, 1);
+        if (tableModel != null) {
+            tableModel.setValueAt(nameTF.getText(), selectedRow, 0);
+            tableModel.setValueAt(valueTA.getText(), selectedRow, 1);
+        } else if (outerTextArea != null) {
+            outerTextArea.setText(valueTA.getText());
+        }
         // Change Cancel label to Close
         closeButton.setText(JMeterUtils.getResString("close")); //$NON-NLS-1$
         textChanged = false;

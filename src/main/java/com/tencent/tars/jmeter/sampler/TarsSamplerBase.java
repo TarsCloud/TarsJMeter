@@ -31,7 +31,6 @@ import java.util.Map;
 
 /**
  * tars shark都会能用到的 sampler base方法
- * @author brookechen
  */
 public abstract class TarsSamplerBase extends AbstractSampler implements ITarsConst {
     private static final Logger log = LoggerFactory.getLogger(TarsSamplerBase.class);
@@ -148,6 +147,7 @@ public abstract class TarsSamplerBase extends AbstractSampler implements ITarsCo
         return this.getPropertyAsString(SERVANT_IP, "");
     }
 
+
     public String getServantPath() {
         return this.getPropertyAsString(SERVANT_PATH, "");
     }
@@ -239,6 +239,14 @@ public abstract class TarsSamplerBase extends AbstractSampler implements ITarsCo
 
     public boolean isKeepAlive() {
         return "true".equalsIgnoreCase(getArgumentMap().get(KEY_KEEP_ALIVE));
+    }
+
+    public void setTransmitType(String type){
+        this.setProperty(SERVANT_PROTOCOL, type);
+    }
+
+    public String getTransmitType() {
+        return this.getPropertyAsString(SERVANT_PROTOCOL, ITarsConst.TCP);
     }
 
     public int getConnectTimeout() {
