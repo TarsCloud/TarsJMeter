@@ -17,7 +17,7 @@ TarsJMeter特点如下：
 1. 安装**JAVA JDK** (建议java8以上)；
 2. [下载JMeter](https://jmeter.apache.org/download_jmeter.cgi)，解压到本地目录即可，建议JMeter 5.2及以上版本；
 3. 安装目录下的/bin 存放了jmeter可执行文件; **安装目录下的/lib/ext**可以添加扩展的第三方协议测试库；
-4. Gradle编译打包或者[dist下载](https://github.com/TarsCloud/TarsJMeter/blob/master/dist/tars-jmeter-1.7.1.jar)
+4. Gradle编译打包或者[dist下载](https://github.com/TarsCloud/TarsJMeter/blob/master/dist/TarsJMeter-1.7.1.jar)
 5. 生成或下载tars_jmeter.jar后，把它放入JMeter安装目录下的**/lib/ext**里。
 
 ## 用例编写步骤

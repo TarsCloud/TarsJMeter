@@ -24,7 +24,7 @@ Dependencies listed as following:
 2. [Download JMeter](https://jmeter.apache.org/download_jmeter.cgi)  Only unzip to the local directory, JMeter 5.2 or above is recommended;
 3. /Bin in the installation directory stores the jmeter executable file; **/lib/ext** in the installation directory can add an extended third-party protocol test library;
 4. Gradle compile and assemble or download by /dist
-5. After building or downloading tars_jmeter.jar, put it into **/lib/ext** included by the JMeter installation directory. 
+5. After building or downloading TarsJMeter.jar, put it into **/lib/ext** included by the JMeter installation directory.
 
 ## Test Case Steps
 
