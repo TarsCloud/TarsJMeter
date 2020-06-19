@@ -30,11 +30,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/**
- * A GUI panel allowing the user to enter name-value argument pairs. These
- * arguments (or parameters) are usually used to provide configuration values
- * for some other component.
- */
 public class FuncParameterPanel extends AbstractConfigGui implements ActionListener {
 
     private static final long serialVersionUID = 240L;
@@ -52,7 +47,7 @@ public class FuncParameterPanel extends AbstractConfigGui implements ActionListe
     /**
      * The model for the arguments table.
      */
-    protected transient ObjectTableModel tableModel; // will only contain Argument or HTTPArgument
+    protected transient ObjectTableModel tableModel; 
 
     private JComponent mainPanel;
 
@@ -133,23 +128,10 @@ public class FuncParameterPanel extends AbstractConfigGui implements ActionListe
         DEFAULT_ARGS.add(new ArgTriple("Response", "", JsonConst.TARS));
     }
 
-    /**
-     * Create a new ArgumentsPanel as an embedded component, using the specified
-     * title.
-     *
-     * @param label the title for the component.
-     */
     public FuncParameterPanel(String label) {
         this(label, null, null);
     }
 
-    /**
-     * Create a new ArgumentsPanel with a border and color background
-     *
-     * @param label text for label
-     * @param bkg   background colour
-     * @param model the table model to use
-     */
     public FuncParameterPanel(String label, Color bkg, ObjectTableModel model) {
         tableLabel = new JLabel(label);
         this.background = bkg;
@@ -200,14 +182,6 @@ public class FuncParameterPanel extends AbstractConfigGui implements ActionListe
         return tableModel.getRowCount();
     }
 
-    /**
-     * A newly created component can be initialized with the contents of a Test
-     * Element object by calling this method. The component is responsible for
-     * querying the Test Element object for the relevant information to display
-     * in its GUI.
-     *
-     * @param el the TestElement to configure
-     */
     @Override
     public void configure(TestElement el) {
         super.configure(el);
@@ -274,9 +248,6 @@ public class FuncParameterPanel extends AbstractConfigGui implements ActionListe
         clear();
     }
 
-    /**
-     * Clear all rows from the table. T.Elanjchezhiyan(chezhiyan@siptech.co.in)
-     */
     public void clear() {
         GuiUtils.stopTableEditing(table);
         tableModel.clearData();
@@ -423,12 +394,6 @@ public class FuncParameterPanel extends AbstractConfigGui implements ActionListe
 
     }
 
-    /**
-     * Add values from the clipboard
-     *
-     * @param lineDelimiter Delimiter string to split clipboard into lines
-     * @param argDelimiter  Delimiter string to split line into key-value pair
-     */
     protected void addFromClipboard(String lineDelimiter, String argDelimiter) {
         GuiUtils.stopTableEditing(table);
         int rowCount = table.getRowCount();
@@ -490,11 +455,6 @@ public class FuncParameterPanel extends AbstractConfigGui implements ActionListe
         return new TarsParamArgument(name, "", JsonConst.TARS); // $NON-NLS-1$ // $NON-NLS-2$
     }
 
-    /**
-     * Stop any editing that is currently being done on the table. This will
-     * save any changes that have already been made.
-     * Needed for subclasses
-     */
     protected void stopTableEditing() {
         GuiUtils.stopTableEditing(table);
     }
