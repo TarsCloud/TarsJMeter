@@ -76,7 +76,7 @@ TarsJMeter特点如下：
 
   * 请求状态：客户与Tars服务间双向交互状态信息
 
-    <img src="./res/step4.png" width="600" height="400"/>
+    <img src="./res/step5.png" width="600" height="400"/>
 
     
 
