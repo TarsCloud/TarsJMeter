@@ -8,8 +8,6 @@ import java.net.Proxy;
 
 public abstract class TarsAbstractImpl implements Interruptible {
 
-    protected static final String KEEP_ALIVE_NETWORK = "keepAliveNetwork";
-
     protected final TarsSamplerBase testElement;
 
     protected int errCode = 0;
@@ -23,24 +21,8 @@ public abstract class TarsAbstractImpl implements Interruptible {
 
     public abstract TarsSampleResult sample(TarsSampleResult result);
 
-    // Allows TarsSamplerProxy to call threadFinished; subclasses can override if necessary
-    protected void threadFinished() {
-    }
-
-    // Allows TarsSamplerProxy to call notifyFirstSampleAfterLoopRestart; subclasses can override if necessary
-    protected void notifyFirstSampleAfterLoopRestart() {
-    }
-
     protected void errorResult(Throwable t, TarsSampleResult res) {
          testElement.errorResult(t, res);
-    }
-
-    protected final void configureSampleLabel(SampleResult res) {
-        if (SampleResult.isRenameSampleLabel()) {
-            res.setSampleLabel(this.testElement.getName());
-        } else {
-            res.setSampleLabel("Tars Request: " + this.testElement.getRequestUri());
-        }
     }
 
     protected Proxy getProxy() {

@@ -1,6 +1,7 @@
 package com.tencent.tars.jmeter.gui;
 
 import com.tencent.tars.jmeter.sampler.TarsSamplerProxy;
+import org.apache.jmeter.gui.GUIMenuSortOrder;
 import org.apache.jmeter.samplers.gui.AbstractSamplerGui;
 import org.apache.jmeter.testelement.TestElement;
 
@@ -10,6 +11,7 @@ import java.awt.*;
 /**
  * @author brookechen
  */
+@GUIMenuSortOrder(1)
 public class GeneralTarsSamplerGui extends AbstractSamplerGui {
 
     private GenralTarsConfigGui tarsConfigGui;
