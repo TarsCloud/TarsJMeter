@@ -190,7 +190,7 @@ public class JsonOutputStream {
     }
 
     public ByteBuffer getByteBuffer(){
-        return this.os.getByteBuffer();
+        return ByteBuffer.wrap(this.os.toByteArray());
     }
 
     public JsonArray getBytesAsJsonArray() {
