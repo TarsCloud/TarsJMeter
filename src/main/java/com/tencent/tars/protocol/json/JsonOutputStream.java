@@ -102,7 +102,7 @@ public class JsonOutputStream {
             double value = valueElement.getAsDouble();
             os.write(value, tag);
         } else if (JsonConst.BYTE.equalsIgnoreCase(type)) {
-            double value = valueElement.getAsByte();
+            byte value = valueElement.getAsByte();
             os.write(value, tag);
         } else if (JsonConst.STRING.equalsIgnoreCase(type)) {
             String value = valueElement.getAsString();
