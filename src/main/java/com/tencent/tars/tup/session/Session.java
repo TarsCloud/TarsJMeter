@@ -1,5 +1,7 @@
 package com.tencent.tars.tup.session;
 
+import com.tencent.tars.tup.ServantInvokeContext;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -23,6 +25,7 @@ public abstract class Session {
 
     public abstract int sendData(byte[] data);
 
+    public abstract int sendData(byte[] data, ServantInvokeContext ctx);
     public abstract int stop();
 
 

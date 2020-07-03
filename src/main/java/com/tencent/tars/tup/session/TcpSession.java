@@ -1,6 +1,7 @@
 package com.tencent.tars.tup.session;
 
 import com.tencent.tars.tup.IPEndPoint;
+import com.tencent.tars.tup.ServantInvokeContext;
 import com.tencent.tars.utils.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +95,17 @@ public class TcpSession extends Session {
             log.error("ERR_NETWORK_SOCKET_NOT_CONNECTED");
             return ErrorCode.ERR_NETWORK_SOCKET_NOT_CONNECTED;
         }
+        return sendDataInSync(data);
+    }
+
+    @Override
+    public int sendData(final byte[] data, ServantInvokeContext ctx) {
+        this.threadName = Thread.currentThread().getName();
+        if (!isSocketConnected()) {
+            log.error("ERR_NETWORK_SOCKET_NOT_CONNECTED");
+            return ErrorCode.ERR_NETWORK_SOCKET_NOT_CONNECTED;
+        }
+        ctx.setSendBytes(data.length + 4);
         return sendDataInSync(data);
     }
 

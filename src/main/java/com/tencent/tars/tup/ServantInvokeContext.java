@@ -11,6 +11,8 @@ public class ServantInvokeContext {
     private Object retVal;
     private JsonObject jsonRetVal;
     private Map<String,String> status;
+    private long sendBytes;
+
 
     public ServantInvokeContext(JsonObject retVal, JsonObject[] arguments) {
         this.arguments = arguments;
@@ -20,6 +22,14 @@ public class ServantInvokeContext {
     public ServantInvokeContext(Object retVal, Object[] arguments) {
         this.arguments = arguments;
         this.retVal = retVal;
+    }
+
+    public long getSendBytes() {
+        return sendBytes;
+    }
+
+    public void setSendBytes(long sendBytes) {
+        this.sendBytes = sendBytes;
     }
 
     public void setStatus(Map<String, String> status) {

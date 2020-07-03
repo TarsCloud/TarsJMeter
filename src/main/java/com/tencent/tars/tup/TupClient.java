@@ -173,6 +173,22 @@ public class TupClient implements INetListener {
         return this.session.sendData(data);
     }
 
+    private int sendRequestPacket(byte[] sbuffer, ServantInvokeContext ctx) {
+        RequestPacket requestPacket = new RequestPacket();
+        requestPacket.sServantName = this.mServant;
+        requestPacket.sFuncName = this.mFunc;
+        requestPacket.iMessageType = this.iMessageType;
+        requestPacket.iRequestId = requestNo.get();
+        requestPacket.iVersion = this.iVersion;
+        requestPacket.cPacketType = this.cPacketType;
+        requestPacket.iTimeout = this.iTimeout;
+        requestPacket.sBuffer = sbuffer;
+        requestPacket.context = this.context;
+        requestPacket.status = this.status;
+        byte[] data = TarsStructUtil.tarsStructToUTF8ByteArray(requestPacket);
+        return this.session.sendData(data, ctx);
+    }
+
     public void setVersion(short iVersion) {
         this.iVersion = iVersion;
     }
@@ -213,8 +229,9 @@ public class TupClient implements INetListener {
         }
         requestNo.addAndGet(1);
         ByteBuffer bf = TupUtil.paramsToJceStream(context.getArgumentValues());
-        localErrorCode += this.sendRequestPacket(bf.array());
+        localErrorCode += this.sendRequestPacket(bf.array(),context);
         if (localErrorCode != ErrorCode.ERR_NONE) {
+            context.setSendBytes(0);
             return localErrorCode;
         }
         ResponsePacket responsePacket = currentResp;
