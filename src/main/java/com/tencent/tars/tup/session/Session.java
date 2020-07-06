@@ -25,7 +25,6 @@ public abstract class Session {
 
     public abstract int sendData(byte[] data);
 
-    public abstract int sendData(byte[] data, ServantInvokeContext ctx);
     public abstract int stop();
 
 

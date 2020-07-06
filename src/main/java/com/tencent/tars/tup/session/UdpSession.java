@@ -1,15 +1,12 @@
 package com.tencent.tars.tup.session;
 
 import com.tencent.tars.tup.IPEndPoint;
-import com.tencent.tars.tup.ServantInvokeContext;
 import com.tencent.tars.utils.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UdpSession extends Session {
@@ -70,7 +67,7 @@ public class UdpSession extends Session {
         try {
             mSocket = new DatagramSocket();
             InetAddress serverAddr = InetAddress.getByName(ipPoint.getIp());
-            mSocket.connect(serverAddr,ipPoint.getPort());
+            mSocket.connect(serverAddr, ipPoint.getPort());
             mSocket.setSoTimeout(this.readTimeout);
             ret = 0;
         } catch (UnknownHostException e) {
@@ -88,7 +85,7 @@ public class UdpSession extends Session {
         int retcode = ErrorCode.ERR_NONE;
         try {
             byte[] respData;
-            mRecvPacket =  new DatagramPacket(new byte[recvSize],recvSize);
+            mRecvPacket = new DatagramPacket(new byte[recvSize], recvSize);
             mSocket.receive(mRecvPacket);
             ByteArrayInputStream iss = new ByteArrayInputStream(mRecvPacket.getData());
             DataInputStream is = new DataInputStream(iss);
@@ -131,24 +128,15 @@ public class UdpSession extends Session {
         return sendDataInSync(data);
     }
 
-    @Override
-    public int sendData(final byte[] data, ServantInvokeContext ctx) {
-        this.threadName = Thread.currentThread().getName();
-        if (!isSocketConnected()) {
-            log.error("ERR_NETWORK_SOCKET_NOT_CONNECTED");
-            return ErrorCode.ERR_NETWORK_SOCKET_NOT_CONNECTED;
-        }
-        ctx.setSendBytes(data.length + 4);
-        return sendDataInSync(data);
-    }
-
     private int sendDataInSync(final byte[] data) {
         try {
             ByteArrayOutputStream oss = new ByteArrayOutputStream();
             DataOutputStream os = new DataOutputStream(oss);
-            os.writeInt(data.length + 4);
+            int len = data.length + 4;
+            os.writeInt(len);
             os.write(data);
-            mSendPacket = new DatagramPacket(oss.toByteArray(),data.length+4);
+            mSendPacket = new DatagramPacket(oss.toByteArray(), len);
+            this.mNetListener.sentBytesDispatch(len, data);
             oss.close();
             mSocket.send(mSendPacket);
         } catch (SocketException e) {

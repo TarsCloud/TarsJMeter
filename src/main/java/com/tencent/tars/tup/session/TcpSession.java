@@ -1,12 +1,14 @@
 package com.tencent.tars.tup.session;
 
 import com.tencent.tars.tup.IPEndPoint;
-import com.tencent.tars.tup.ServantInvokeContext;
 import com.tencent.tars.utils.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
 import java.net.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -98,22 +100,13 @@ public class TcpSession extends Session {
         return sendDataInSync(data);
     }
 
-    @Override
-    public int sendData(final byte[] data, ServantInvokeContext ctx) {
-        this.threadName = Thread.currentThread().getName();
-        if (!isSocketConnected()) {
-            log.error("ERR_NETWORK_SOCKET_NOT_CONNECTED");
-            return ErrorCode.ERR_NETWORK_SOCKET_NOT_CONNECTED;
-        }
-        ctx.setSendBytes(data.length + 4);
-        return sendDataInSync(data);
-    }
-
     private int sendDataInSync(final byte[] data) {
         try {
-            mSocketWriter.writeInt(data.length + 4);
+            int len = data.length + 4;
+            mSocketWriter.writeInt(len);
             mSocketWriter.write(data);
             mSocketWriter.flush();
+            this.mNetListener.sentBytesDispatch(len, data);
         } catch (SocketException e) {
             log.error("sendDataInSync()" + " has a SocketException at" + threadName, e);
             return ErrorCode.ERR_NETWORK_SOCKET_TIMEOUT_EXCEPTION_RW;

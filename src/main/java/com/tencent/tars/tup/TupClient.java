@@ -42,7 +42,8 @@ public class TupClient implements INetListener {
 
 
     private ResponsePacket currentResp = null;
-
+    private byte[] sentData = null;
+    private int sentLen = 0;
 
     private int startErrorCode = 0;
     private final AtomicBoolean mRunning = new AtomicBoolean(false);
@@ -146,6 +147,12 @@ public class TupClient implements INetListener {
     }
 
     @Override
+    public void sentBytesDispatch(int length, byte[] sentData) {
+        this.sentLen = length;
+        this.sentData = sentData;
+    }
+
+    @Override
     public void handleData(final byte[] data) {
         if (data == null) {
             return;
@@ -171,22 +178,6 @@ public class TupClient implements INetListener {
         requestPacket.status = this.status;
         byte[] data = TarsStructUtil.tarsStructToUTF8ByteArray(requestPacket);
         return this.session.sendData(data);
-    }
-
-    private int sendRequestPacket(byte[] sbuffer, ServantInvokeContext ctx) {
-        RequestPacket requestPacket = new RequestPacket();
-        requestPacket.sServantName = this.mServant;
-        requestPacket.sFuncName = this.mFunc;
-        requestPacket.iMessageType = this.iMessageType;
-        requestPacket.iRequestId = requestNo.get();
-        requestPacket.iVersion = this.iVersion;
-        requestPacket.cPacketType = this.cPacketType;
-        requestPacket.iTimeout = this.iTimeout;
-        requestPacket.sBuffer = sbuffer;
-        requestPacket.context = this.context;
-        requestPacket.status = this.status;
-        byte[] data = TarsStructUtil.tarsStructToUTF8ByteArray(requestPacket);
-        return this.session.sendData(data, ctx);
     }
 
     public void setVersion(short iVersion) {
@@ -229,12 +220,13 @@ public class TupClient implements INetListener {
         }
         requestNo.addAndGet(1);
         ByteBuffer bf = TupUtil.paramsToJceStream(context.getArgumentValues());
-        localErrorCode += this.sendRequestPacket(bf.array(),context);
+        localErrorCode += this.sendRequestPacket(bf.array());
         if (localErrorCode != ErrorCode.ERR_NONE) {
             context.setSendBytes(0);
             return localErrorCode;
         }
         ResponsePacket responsePacket = currentResp;
+        context.setSendBytes(this.sentLen);
         if (responsePacket == null) {
             localErrorCode += ErrorCode.ERR_TUP_RESPONSE_BODY_EMPTY;
             return localErrorCode;
