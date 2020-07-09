@@ -79,6 +79,7 @@ public class TarsImpl extends TarsAbstractImpl {
 
             ServantInvokeContext context = new ServantInvokeContext(testElement.getReturnValue(), testElement.getRequestParameters());
             this.errCode = client.invokeMethod(context);
+            result.setSentBytes(context.getSendBytes());
             resultData.append(ITarsConst.RETURN_VALUE_NAME + ":\n");
             resultData.append(JsonStreamUtil.toPrettyFormat(context.getJsonRetVal())).append("\n\n");
             resultData.append("Status" + ":\n");

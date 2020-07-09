@@ -42,7 +42,8 @@ public class TupClient implements INetListener {
 
 
     private ResponsePacket currentResp = null;
-
+    private byte[] sentData = null;
+    private int sentLen = 0;
 
     private int startErrorCode = 0;
     private final AtomicBoolean mRunning = new AtomicBoolean(false);
@@ -146,6 +147,12 @@ public class TupClient implements INetListener {
     }
 
     @Override
+    public void sentBytesDispatch(int length, byte[] sentData) {
+        this.sentLen = length;
+        this.sentData = sentData;
+    }
+
+    @Override
     public void handleData(final byte[] data) {
         if (data == null) {
             return;
@@ -215,9 +222,11 @@ public class TupClient implements INetListener {
         ByteBuffer bf = TupUtil.paramsToJceStream(context.getArgumentValues());
         localErrorCode += this.sendRequestPacket(bf.array());
         if (localErrorCode != ErrorCode.ERR_NONE) {
+            context.setSendBytes(0);
             return localErrorCode;
         }
         ResponsePacket responsePacket = currentResp;
+        context.setSendBytes(this.sentLen);
         if (responsePacket == null) {
             localErrorCode += ErrorCode.ERR_TUP_RESPONSE_BODY_EMPTY;
             return localErrorCode;

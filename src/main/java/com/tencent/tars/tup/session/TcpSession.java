@@ -5,7 +5,10 @@ import com.tencent.tars.utils.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
 import java.net.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -99,9 +102,11 @@ public class TcpSession extends Session {
 
     private int sendDataInSync(final byte[] data) {
         try {
-            mSocketWriter.writeInt(data.length + 4);
+            int len = data.length + 4;
+            mSocketWriter.writeInt(len);
             mSocketWriter.write(data);
             mSocketWriter.flush();
+            this.mNetListener.sentBytesDispatch(len, data);
         } catch (SocketException e) {
             log.error("sendDataInSync()" + " has a SocketException at" + threadName, e);
             return ErrorCode.ERR_NETWORK_SOCKET_TIMEOUT_EXCEPTION_RW;

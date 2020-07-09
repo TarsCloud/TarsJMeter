@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UdpSession extends Session {
@@ -69,7 +67,7 @@ public class UdpSession extends Session {
         try {
             mSocket = new DatagramSocket();
             InetAddress serverAddr = InetAddress.getByName(ipPoint.getIp());
-            mSocket.connect(serverAddr,ipPoint.getPort());
+            mSocket.connect(serverAddr, ipPoint.getPort());
             mSocket.setSoTimeout(this.readTimeout);
             ret = 0;
         } catch (UnknownHostException e) {
@@ -87,7 +85,7 @@ public class UdpSession extends Session {
         int retcode = ErrorCode.ERR_NONE;
         try {
             byte[] respData;
-            mRecvPacket =  new DatagramPacket(new byte[recvSize],recvSize);
+            mRecvPacket = new DatagramPacket(new byte[recvSize], recvSize);
             mSocket.receive(mRecvPacket);
             ByteArrayInputStream iss = new ByteArrayInputStream(mRecvPacket.getData());
             DataInputStream is = new DataInputStream(iss);
@@ -134,9 +132,11 @@ public class UdpSession extends Session {
         try {
             ByteArrayOutputStream oss = new ByteArrayOutputStream();
             DataOutputStream os = new DataOutputStream(oss);
-            os.writeInt(data.length + 4);
+            int len = data.length + 4;
+            os.writeInt(len);
             os.write(data);
-            mSendPacket = new DatagramPacket(oss.toByteArray(),data.length+4);
+            mSendPacket = new DatagramPacket(oss.toByteArray(), len);
+            this.mNetListener.sentBytesDispatch(len, data);
             oss.close();
             mSocket.send(mSendPacket);
         } catch (SocketException e) {
