@@ -167,7 +167,7 @@ public abstract class TarsSamplerBase extends AbstractSampler implements ITarsCo
             if (TextUtils.isEmpty(returnValue)) {
                 return JsonStreamUtil.getIntValue(0);
             }
-            return JsonParser.parseString(returnValue).getAsJsonObject();
+            return JsonStreamUtil.getTarsValue(JsonParser.parseString(returnValue).getAsJsonObject());
         } else {
             return TarsParamUtil.getValueByType(type);
         }

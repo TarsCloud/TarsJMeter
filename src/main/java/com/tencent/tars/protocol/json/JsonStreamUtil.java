@@ -213,6 +213,13 @@ public class JsonStreamUtil {
         return ret;
     }
 
+    public static JsonObject getTarsValue(JsonObject value) {
+        JsonObject ret = new JsonObject();
+        ret.addProperty(JsonConst.KEY_TYPE, JsonConst.TARS);
+        ret.add(JsonConst.KEY_VALUE, value);
+        return ret;
+    }
+
     public static JsonObject getIntVectorValue(int[] value) {
         JsonObject ret = new JsonObject();
         ret.addProperty(JsonConst.KEY_TYPE, JsonConst.INT_VEC);
