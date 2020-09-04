@@ -81,6 +81,7 @@ TarsJMeter特点如下：
     
 
 4. 点击运行，查看树结果，可获取Tars服务的响应信息
+
     <img src="./res/step6.png" width="600" height="400"/>
 
 ## Tars Json数据定义及使用
